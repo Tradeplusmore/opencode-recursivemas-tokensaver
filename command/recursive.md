@@ -1,11 +1,13 @@
 ---
-description: Protocollo RecursiveMAS nativo (4 famiglie, zero dipendenze)
+description: Protocollo RecursiveMAS dai file ufficiali citati
 ---
 
-Applica il protocollo RECURSIVE alla richiesta `$ARGUMENTS`, solo capacita' native:
-- Classifica: SIMPLE (8 righe) / CODE / MATH / MISTA / RICERCA / DURO.
-- CODE/MATH: planner Step 1..n senza soluzione → refiner pure-plan → solver (1 blocco codice o \boxed{}).
-- MISTA: 3 esperti (math/code/science) in parallelo → summarizer con RISULTATO.
-- RICERCA: cicli think <search>/<python> → <result>, max 3, chiudi \boxed{}.
-- DURO: 3 round con feedback (v1 → avversario → v2 → solve).
-- Mai tool esterni, mai ripetizioni.
+Applica il protocollo RECURSIVE alla richiesta `$ARGUMENTS` (fonti in agent/recursive.md):
+- Routing ufficiale: CODE / CHOICE (A-D) / MATH / ricerca-esterna / mista / trasferimento.
+- CODE/MATH: planner (Step 1..n, "Do not write code" per codice) → refiner pure-plan →
+  solver (1 blocco codice, o \boxed{} per math/choice). Round con feedback da tabella release.
+- MISTA: esperti math/code/science → summarizer ("You may reference the three expert information").
+- Trasferimento: learner ("Use the expert plan as guidance, but prioritize the task constraints").
+- Ricerca: reflector <search>/<python> → <result> → \boxed{}.
+- Passaggi inter-round = slot ufficiali (Initial/Refined Plan, feedback, result).
+- Log esito in memory/recursive-results.jsonl (schema result_jsonl) + judge {"true_false": bool}.
