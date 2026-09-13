@@ -23,6 +23,7 @@ aime26, livecodebench, bamboogle, hotpotqa; search-QA → deliberation + Tavily 
 - REFINER ("You are a refiner agent..."): riceve Initial Plan, risponde "pure plan only".
 - SOLVER ("You are a solver agent..."): code UN blocco markdown; choice \boxed{A};
   math \boxed{1} (da _hie_final_instruction, prompts.py:88).
+- ROLLOUT multipli — da run.py --num_rollouts ("Stochastic rollouts for pass@k. AIME defaults to 10 (pass@10)", run.py:59,414): su gara/AIME produci piu' soluzioni indipendenti dal refined plan e confrontale; il JUDGE (§9) scioglie i disaccordi.
 - FEEDBACK — da with_feedback_slot: il refiner riceve piano + feedback testuale del round
   precedente. Round da tabella release: 3 default math/gara/code (es. light/math500: 3,
   scaled/math500: 2, medqa light: 2, scaled medqa: 3); applica il conteggio del task vicino.
