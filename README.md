@@ -1,92 +1,43 @@
-# OpenCode x RecursiveMAS — Token-Saver & Reasoning Router
+# OpenCode x RecursiveMAS — logica integrata, zero dipendenze
 
-Integrazione globale di OpenCode con la **logica RecursiveMAS** (planner -> critic -> solver):
-risparmi token sul banale, migliori la qualita sul complesso, deleghi alla MAS-GPU solo quando serve.
+Tutta la logica RecursiveMAS (planner -> critic/refiner -> solver) integrata in
+OpenCode nativo: **agent globale + comando + istruzioni**. Nessun MCP, nessun
+server, nessuno script, nessuna GPU. Apri `opencode` e funziona.
 
-> Stato: installazione globale verificata — `opencode mcp list -> recursivemas connected`,
-> audit bug/sicurezza superato, server su `127.0.0.1:8001`.
+## Come funziona (automatico, ogni progetto)
 
-## Preview
+| Richiesta | Comportamento |
+|---|---|
+| banale (saluti, traduzioni, codice breve) | risposta in max 8 righe |
+| normale | PLAN 3-5 punti / CRITIC / SOLVE + RISULTATO |
+| codice | planner 3-6 step senza codice -> refiner -> solver con UN blocco codice |
+| math/scienza | esperto + risposta in boxed |
+| complessa (dimostra, matrici, refactor grossi) | versione DEEP estesa, tutto inline |
+| `/recursive ...` | forza il protocollo |
 
-| Richiesta | Comportamento automatico | Costo |
-|---|---|---|
-| `traduci / riassumi / ciao` | risposta in max 8 righe, 0 tool | ~0 extra |
-| coding normale, debug semplice | `PLAN -> CRITIC -> SOLVE`, budget 512 | basso |
-| `dimostra / integrale / matrice / refactor >60 righe` | tool MCP `call_recursivemas` (porta 8001) | solo quando serve |
-| stessa domanda ripetuta | `CACHE HIT` da `.recursivemas_cache.json` | 0 token |
-
-## Architettura
-
-```text
-OpenCode (tuo model) -> instructions globali SIMPLE/MEDIUM/COMPLEX
-  SIMPLE/MEDIUM -> formato rigido PLAN/CRITIC/SOLVE+RISULTATO
-  COMPLEX -> MCP recursivemas (stdio) -> FastAPI 127.0.0.1:8001 -> RecursiveMAS GPU*
-  *solo se server.py attivo con checkpoint reali, altrimenti fallback testuale
-```
-
-Porta **8001** (non 8000) per non confliggere con eventuali proxy locali.
-
-## Struttura repo
-
-```text
-recursivemas/
-  server.py            # wrapper FastAPI OpenAI-compatible (GET /health, POST /v1/chat/completions, solo stream:false)
-  opencode-router.py   # CLI smart: classify->compress->cache->delega/fallback
-  mcp-recursivemas.py  # MCP stdio: call_recursivemas + plan_critic_solve
-instructions/
-  AGENTS-RecursiveMAS.md   # regole da unire al tuo AGENTS.md
-docs/
-  guida-recursivemas-opencode-claude.md
-  README-TOKEN-SAVER.md
-  INSTALL-GLOBALE.md
-scripts/
-  start-recursivemas.bat / .sh
-opencode.example.json  # template provider+MCP+instructions
-```
-
-## Flusso logico (router)
-
-```text
-domanda -> compress(4000ch) -> classify(SIMPLE/MEDIUM/COMPLEX)
-  SIMPLE -> prompt cheap, nessuna chiamata
-  MEDIUM -> sequential-light, 512 tok + cache SHA256
-  COMPLEX -> sequential-scaled, 1024 tok (2048 con --deep) + cache
-  MAS offline / URL non locale -> fallback prompt 3-step locale
-```
-
-## Schema operativo
-
-1. Installazione globale una volta sola -> vale per **ogni** progetto.
-2. Lavoro quotidiano: apri `opencode`, programmi. Niente da avviare.
-3. Solo per math/scienza dura: accendi `server.py` in un secondo terminale.
-4. Ripetizioni: la cache risponde senza spendere token.
-
-## Installazione globale
+## Installazione (una volta)
 
 ```bash
-pip install -r requirements.txt
-mkdir -p ~/.config/opencode/recursivemas
-cp recursivemas/* ~/.config/opencode/recursivemas/
-# unisci opencode.example.json nel tuo ~/.config/opencode/opencode.jsonc
-opencode mcp list   # deve dire recursivemas connected
+mkdir -p ~/.config/opencode/agent ~/.config/opencode/command
+cp agent/recursive.md ~/.config/opencode/agent/
+cp command/recursive.md ~/.config/opencode/command/
+# unisci "instructions" da opencode.example.json nel tuo opencode.jsonc
 ```
 
-Windows: `setx RECURSIVEMAS_API_KEY "sk-recursivemas"`, poi riavvia il terminale.
+`opencode.example.json` = solo `$schema` + `instructions`. Niente provider, niente MCP.
 
-## Server GPU (opzionale)
+## Struttura
 
-```bash
-MAS_STYLE=sequential_scaled MAS_DEVICE=cuda python recursivemas/server.py
-curl http://127.0.0.1:8001/health
+```text
+agent/recursive.md      # agent globale (primary): tutti i track, zero tool esterni
+command/recursive.md    # /recursive
+opencode.example.json   # template config minima
+docs/                   # guide complete
+extras/                 # OPZIONALI (richiedono dipendenze): server FastAPI, router CLI,
+                        # pipeline CPU Ollama, MCP server, colab GPU, code pipeline, check-gpu
+recursivemas/           # sorgenti originali degli extra
 ```
 
-## Sicurezza
+## Extra opzionali (solo se vuoi: server GPU/Colab/CPU/MCP)
 
-Vedi `SECURITY.md`. Mai esporre su `0.0.0.0` senza auth. Cache esclusa da git.
-
-## Audit eseguito (2026-09-13)
-
-- py_compile OK x3, JSON validi, deps OK
-- classificazione SIMPLE/COMPLEX OK, SSRF guard blocca URL remoti + fallback OK
-- server: /health OK, senza moduli MAS -> 500 generico, stream:true -> 400
-- fix: typo eig, clamp token, truncate 8000ch, errori generici, chmod 600 cache, bind 127.0.0.1:8001
+Vedi `docs/` e `extras/`. Non servono per l'uso quotidiano.
