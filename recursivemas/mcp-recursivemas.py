@@ -44,8 +44,28 @@ def call_recursivemas(question: str, style: str = "sequential-scaled") -> str:
 
 
 @mcp.tool()
-def plan_critic_solve(question: str) -> str:
-    """Restituisce un piano planner->critic->solver a budget ridotto (text-level, gratis)."""
+def plan_critic_solve(question: str, track: str = "general") -> str:
+    """Prompt planner->refiner/critic->solver a budget ridotto (testuale, gratis).
+    track: general | code | math | deliberation (wording ufficiale RecursiveMAS, testuale)."""
+    q = question.strip()[:4000]
+    if track == "code":
+        return (
+            "You are a planner agent in a multi-agent coding system. "
+            f"Problem: {q} Provide a step-by-step plan (3-6 steps). Do not write code. "
+            "Then act as refiner: refine it (3-6 steps, no code). "
+            "Then as solver: final code in ONE markdown block."
+        )
+    if track == "math":
+        return (
+            "You are the math expert in a multi-agent system. "
+            f"Question: {q} Solve and put the final answer inside \\boxed{{}}, e.g. \\boxed{{1}}."
+        )
+    if track == "deliberation":
+        return (
+            "Reason step by step. For external facts use available tools, reporting "
+            f"<search>q</search>/<result>r</result>; for compute use scripts as <python>code</python>/<result>out</result>. "
+            f"Question: {q} Close with exact answer in \\boxed{{}}."
+        )
     q = question.strip()[:4000]
     return (
         "Applica RECURSIVE (planner->critic->solver). Planner max 5 righe, Critic max 5 righe, "

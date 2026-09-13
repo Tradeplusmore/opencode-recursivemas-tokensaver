@@ -140,6 +140,7 @@ def main():
     ap.add_argument("--cheap", action="store_true", help="forza sequential-light + 512 token")
     ap.add_argument("--deep", action="store_true", help="forza sequential-scaled + 2048 token")
     ap.add_argument("--prompt-only", action="store_true", help="stampa solo il prompt 3-step, nessuna chiamata")
+    ap.add_argument("--code", action="store_true", help="pipeline code ufficiale planner->refiner->solver (testuale, no GPU)")
     ap.add_argument("--no-cache", action="store_true", help="ignora cache")
     ap.add_argument("--max-chars", type=int, default=4000)
     args = ap.parse_args()
@@ -159,7 +160,19 @@ def main():
         print("\n[router] domanda semplice: incolla il prompt sopra in OpenCode, nessuna chiamata MAS.", file=sys.stderr)
         return
 
-    if args.prompt_only:
+    if args.code:
+        try:
+            from code_pipeline import (code_planner_prompt, code_refiner_prompt, code_solver_prompt)
+        except ImportError:
+            from recursivemas.code_pipeline import (  # uso globale
+                code_planner_prompt, code_refiner_prompt, code_solver_prompt)
+        print("=" * 20 + " FASE 1/3: PLANNER (incolla in OpenCode, output -> fase 2) " + "=" * 20)
+        print(code_planner_prompt(question))
+        print("\n" + "=" * 20 + " FASE 2/3: REFINER (incolla output planner in <PLANNER_OUT>) " + "=" * 20)
+        print(code_refiner_prompt(question, "<PLANNER_OUT>"))
+        print("\n" + "=" * 20 + " FASE 3/3: SOLVER (incolla output refiner in <REFINED_PLAN>) " + "=" * 20)
+        print(code_solver_prompt(question, "<REFINED_PLAN>"))
+        return
         print(build_recursive_prompt(question, budget="deep" if args.deep else "cheap"))
         return
 
