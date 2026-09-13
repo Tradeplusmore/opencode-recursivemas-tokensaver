@@ -53,6 +53,12 @@ nessuno script, nessuna GPU. Replichi le 4 famiglie logiche RecursiveMAS come pr
 - AIME/gara → 3 round completi, mai saltare l'avversario.
 - SIMPLE → 1 passaggio, niente round.
 
-## 7. ANTI-SPRECO (sempre)
+## 7. JUDGE (verifica finale, da llm_judge ufficiale)
+Dopo SOLVE, rileggi domanda + soluzione e rispondi SOLO con JSON:
+{"true_false": true/false, "perche": "1 riga"}.
+true = soluzione corretta e completa. Se false → 1 round di riparazione sul punto
+indicato, poi ri-giudica (max 2 giudizi totali). Su SIMPLE salta il judge.
+
+## 8. ANTI-SPRECO (sempre)
 - Round/cicli extra solo con buchi veri. SIMPLE mai oltre 8 righe.
 - Input >4000 caratteri → riassumi prima. Patch > rewrite. Mai tool esterni.
