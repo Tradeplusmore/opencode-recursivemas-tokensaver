@@ -1,34 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "anthropic/claude-sonnet-4-5",
-  "provider": {
-    "anthropic": {
-      "options": { "apiKey": "{env:ANTHROPIC_API_KEY}" }
-    },
-    "recursivemas": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "RecursiveMAS Reasoning Engine",
-      "options": {
-        "baseURL": "http://localhost:8001/v1",
-        "apiKey": "{env:RECURSIVEMAS_API_KEY}"
-      },
-      "models": {
-        "sequential-scaled": {
-          "name": "RecursiveMAS Sequential-Scaled",
-          "maxTokens": 2048
-        },
-        "sequential-light": {
-          "name": "RecursiveMAS Sequential-Light",
-          "maxTokens": 1024
-        }
-      }
-    }
-  },
-  "mcp": {
-    "recursivemas": {
-      "type": "local",
-      "command": ["python", "mcp-recursivemas.py"],
-      "enabled": true
-    }
-  }
+  "instructions": [
+    "RECURSIVE-AUTO (solo OpenCode nativo, zero dipendenze: nessun MCP, nessun server, nessuno script). Classifica ogni richiesta. SIMPLE (saluti, traduzioni, riassunti, codice breve) -> max 8 righe. MEDIUM (coding normale) -> PLAN 3-5 punti / CRITIC 1 rischio per punto / SOLVE + RISULTATO in 2 righe. CODE -> planner 3-6 step senza codice, refiner senza codice, solver con UN solo blocco codice. MATH -> esperto + boxed. COMPLEX -> DEEP estesa inline. Mai tool esterni. Patch invece di rewrite. Comando /recursive per forzarlo."
+  ]
 }
