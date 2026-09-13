@@ -8,7 +8,7 @@ Layout reale: inference/system_loader.py, inference/run.py (CLI eval), inference
 
 Setup MAS vera:
     git clone https://github.com/RecursiveMAS/RecursiveMAS.git
-    set MAS_REPO=C:\path\RecursiveMAS
+    set MAS_REPO=C:/path/RecursiveMAS
     set MAS_STYLE=sequential_scaled  (keys reali: sequential_light, sequential_scaled, mixture, distillation, deliberation)
     set MAS_DATASET=math500  (math500, medqa, gpqa, mbppplus, aime25, aime26, livecodebench, bamboogle, hotpotqa)
     python server.py
