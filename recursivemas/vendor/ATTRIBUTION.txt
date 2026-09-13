@@ -2,3 +2,5 @@ Fonte: https://github.com/RecursiveMAS/RecursiveMAS — MIT License, (c) 2026 Re
 File: inference/prompts.py + train/mas_prompt.py (vendored come riferimento statico).
 I builder testuali sono portati in ../code_pipeline.py (senza torch/GPU).
 Gli SLOT latenti (<<LATENT_*>>) NON sono eseguibili senza pesi+adapters+GPU.
++ inference/inference_utils/reflector_tool_notes.py, llm_judge.py,
+  inference_mas*.py (studiati), load_from_repo.py (STYLE_SPECS verificate).
