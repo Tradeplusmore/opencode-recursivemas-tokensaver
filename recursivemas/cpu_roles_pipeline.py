@@ -15,6 +15,11 @@ Con i pesi-ruolo ufficiali convertiti in GGUF (scripts/setup-cpu-roles.*):
 """
 import argparse
 import sys
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
 import urllib.request
 import json
 
@@ -51,9 +56,9 @@ def run_pipeline(question: str, planner_m: str, critic_m: str, solver_m: str, co
 def main():
     ap = argparse.ArgumentParser(description="Pipeline ruoli CPU via Ollama (no GPU)")
     ap.add_argument("question", nargs="*", help="domanda")
-    ap.add_argument("--planner", default="gemma3:4b")
-    ap.add_argument("--critic", default="gemma3:4b")
-    ap.add_argument("--solver", default="gemma3:4b")
+    ap.add_argument("--planner", default="recursivemas-planner")
+    ap.add_argument("--critic", default="recursivemas-critic")
+    ap.add_argument("--solver", default="recursivemas-solver")
     ap.add_argument("--code", action="store_true")
     args = ap.parse_args()
     q = " ".join(args.question).strip()

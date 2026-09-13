@@ -163,8 +163,8 @@ def main():
 
     if args.local:
         import subprocess
-        mods = [os.getenv("OLLAMA_PLANNER", "gemma3:4b"), os.getenv("OLLAMA_CRITIC", "gemma3:4b"),
-                os.getenv("OLLAMA_SOLVER", "gemma3:4b")]
+        mods = [os.getenv("OLLAMA_PLANNER", "recursivemas-planner"), os.getenv("OLLAMA_CRITIC", "recursivemas-critic"),
+                os.getenv("OLLAMA_SOLVER", "recursivemas-solver")]
         cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)),
                "cpu_roles_pipeline.py"), "--planner", mods[0], "--critic", mods[1],
                "--solver", mods[2]] + (["--code"] if args.code else []) + [question]
