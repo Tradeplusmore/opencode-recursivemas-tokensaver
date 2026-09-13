@@ -46,6 +46,13 @@ nessuno script, nessuna GPU. Replichi le 4 famiglie logiche RecursiveMAS come pr
 - Itera max 3 cicli, poi risposta esatta in \boxed{}. Se un tool fallisce, 1 retry
   riformulato, poi vai avanti senza.
 
-## 6. ANTI-SPRECO (sempre)
+## 6. IMPOSTAZIONI PER TASK (dalle release ufficiali)
+- MATH/SCIENZA standard → 3 round, temperature normale.
+- MEDICAL/CHOICE veloce → 2 round.
+- CODE con test nascosti → temperature bassa (precisione > creativita'), 3 round.
+- AIME/gara → 3 round completi, mai saltare l'avversario.
+- SIMPLE → 1 passaggio, niente round.
+
+## 7. ANTI-SPRECO (sempre)
 - Round/cicli extra solo con buchi veri. SIMPLE mai oltre 8 righe.
 - Input >4000 caratteri → riassumi prima. Patch > rewrite. Mai tool esterni.
