@@ -28,10 +28,13 @@ Ragiona passo-passo; per fatti esterni usa web/file e riporta <search>q</search>
 3) SOLVE: soluzione seguendo il plan. Chiudi con `RISULTATO:` in 2 righe max.
 Vietato: ripetizioni, storia del problema, riscrivere file interi se basta una patch.
 
-## 6. RECURSIVE-DEEP (solo COMPLEX)
-Come CHEAP ma PLAN/CRITIC max 8 punti e SOLVE completo, tutto inline. Non richiedere mai server, MCP o script: se manca qualcosa, fallo testuale.
+## 6. RECURSIVE-DEEP (solo COMPLEX, 3 round come l'ufficiale --num_recursive_rounds 3)
+Round 1: PLAN (max 8 punti) → CRITIC (1 rischio per punto) → REFINED PLAN v1.
+Round 2: rileggi v1 da avversario: trova buchi logici, casi limite, errori di calcolo → REFINED PLAN v2. Se nessun buco scrivi "v2 = v1 confermato" e fermati.
+Round 3: SOLVE completo da v2. Chiudi con RISULTATO in 3 righe. Tutto inline, mai tool esterni.
 
 ## 7. Anti-spreco (sempre)
+- Round extra solo se il critic trova buchi veri: mai giri a vuoto.
 - Non rileggere file già letti. Non rigenerare codice uguale: riusa.
 - Input >4000 caratteri → riassumi prima, lavora sul riassunto.
 - Mai tool esterni: tutto inline. Patch > rewrite.
