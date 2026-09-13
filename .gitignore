@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+.recursivemas_cache.json
+venv/
+.env
