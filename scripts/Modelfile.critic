@@ -1,0 +1,4 @@
+FROM ./cpu-roles/critic-q4.gguf
+PARAMETER temperature 0.4
+PARAMETER num_predict 600
+SYSTEM "You are a helpful assistant."

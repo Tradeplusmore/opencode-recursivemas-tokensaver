@@ -141,6 +141,7 @@ def main():
     ap.add_argument("--deep", action="store_true", help="forza sequential-scaled + 2048 token")
     ap.add_argument("--prompt-only", action="store_true", help="stampa solo il prompt 3-step, nessuna chiamata")
     ap.add_argument("--code", action="store_true", help="pipeline code ufficiale planner->refiner->solver (testuale, no GPU)")
+    ap.add_argument("--local", action="store_true", help="pipeline ruoli reale su CPU via Ollama (gemma3:4b default, 0 token API, ~1-2 min)")
     ap.add_argument("--no-cache", action="store_true", help="ignora cache")
     ap.add_argument("--max-chars", type=int, default=4000)
     args = ap.parse_args()
@@ -160,7 +161,16 @@ def main():
         print("\n[router] domanda semplice: incolla il prompt sopra in OpenCode, nessuna chiamata MAS.", file=sys.stderr)
         return
 
-    if args.code:
+    if args.local:
+        import subprocess
+        mods = [os.getenv("OLLAMA_PLANNER", "gemma3:4b"), os.getenv("OLLAMA_CRITIC", "gemma3:4b"),
+                os.getenv("OLLAMA_SOLVER", "gemma3:4b")]
+        cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+               "cpu_roles_pipeline.py"), "--planner", mods[0], "--critic", mods[1],
+               "--solver", mods[2]] + (["--code"] if args.code else []) + [question]
+        print(f"[router] LOCAL-CPU: 3 chiamate Ollama ({'/'.join(mods)}), gratis, ~1-2 min...", file=sys.stderr)
+        r = subprocess.run(cmd, capture_output=False)
+        sys.exit(r.returncode)
         try:
             from code_pipeline import (code_planner_prompt, code_refiner_prompt, code_solver_prompt)
         except ImportError:
