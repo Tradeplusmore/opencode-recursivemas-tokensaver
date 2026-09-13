@@ -59,9 +59,7 @@ command/recursive.md            # /recursive: forza il protocollo
 opencode.example.json           # config minima: $schema + instructions
 memory/recursive-results.jsonl  # log esiti (schema result_jsonl ufficiale)
 docs/                           # guide (guida completa, token-saver, installazione, CPU roles)
-claude/                         # porting istruzioni per Claude Desktop (Project)
-recursivemas/                   # sorgenti extra + vendor/ (file ufficiali MIT)
-extras/                         # extra opzionali (server, router, CPU, MCP, colab)
+recursivemas/                   # sorgenti extra archiviati + vendor/ (file ufficiali MIT)
 scripts/                        # start server, setup CPU roles, Modelfile
 ```
 
