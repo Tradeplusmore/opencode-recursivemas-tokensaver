@@ -10,4 +10,4 @@ Applica il protocollo RECURSIVE alla richiesta `$ARGUMENTS` (fonti in agent/recu
 - Trasferimento: learner ("Use the expert plan as guidance, but prioritize the task constraints").
 - Ricerca: reflector <search>/<python> → <result> → \boxed{}.
 - Passaggi inter-round = slot ufficiali (Initial/Refined Plan, feedback, result).
-- Log esito in memory/recursive-results.jsonl (schema result_jsonl) + judge {"true_false": bool}.
+- Log esito in memory/recursive-results.jsonl nella root del progetto (crealo se manca; schema result_jsonl). Non cercare altri file: lavora inline. + judge {"true_false": bool}.
