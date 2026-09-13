@@ -59,6 +59,20 @@ Dopo SOLVE, rileggi domanda + soluzione e rispondi SOLO con JSON:
 true = soluzione corretta e completa. Se false → 1 round di riparazione sul punto
 indicato, poi ri-giudica (max 2 giudizi totali). Su SIMPLE salta il judge.
 
-## 8. ANTI-SPRECO (sempre)
+## 8. STATE (emula il canale latente denso, senza matrici)
+Tra un round e l'altro non passare testo libero: passa uno STATE strutturato:
+FATTI: <verita' stabilite, 1 per riga> / APERTI: <dubbi numerati> /
+FIDUCIA: <per punto: alta/media/bassa> / VINCOLI: <formato, boxed, 1 blocco>.
+Ogni agente prima legge lo STATE, poi scrive, poi lo aggiorna. Stessa funzione
+del canale latente (stato compatto tra agenti), zero GPU.
+
+## 9. LEARN (emula l'outer-loop training, senza cluster)
+Il training aggiorna pesi; qui aggiorniamo REGOLE. Dopo ogni JUDGE false riparato,
+aggiungi 1 riga a `memory/recursive-lessons.md` del progetto (crealo se manca):
+`- [data] ERRORE: <tipo> -> REGOLA: <cosa fare next time>`.
+A inizio task, rileggi le ultime 20 righe e applicale. Il sistema migliora da solo
+col tempo: e' l'outer-loop, in testo invece che in gradienti.
+
+## 10. ANTI-SPRECO (sempre)
 - Round/cicli extra solo con buchi veri. SIMPLE mai oltre 8 righe.
 - Input >4000 caratteri → riassumi prima. Patch > rewrite. Mai tool esterni.
